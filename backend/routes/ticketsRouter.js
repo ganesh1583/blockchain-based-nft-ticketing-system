@@ -32,7 +32,7 @@ ticketsRouter.post("/buy", userMiddleware, async (req, res, next) => {
     // Upload the JSON to Pinata and get the CID
     const CID = await uploadJsonToPinata({ ticket_id, event_id, userId });
 
-    const txHash = await mintNFT(walletAddress, CID);
+    const txHash = await mintNFT(CID,walletAddress);
     console.log("NFT minted, txhash : " + txHash);
 
     // Create the ticket in the database
@@ -40,7 +40,7 @@ ticketsRouter.post("/buy", userMiddleware, async (req, res, next) => {
       ticket_id,
       event_id,
       wallet_address: walletAddress,
-      token_id: ticket_id,
+      token_id: txHash.tokenId,
     });
     
     const newTransaction = await transactionModel.create({
@@ -49,7 +49,7 @@ ticketsRouter.post("/buy", userMiddleware, async (req, res, next) => {
       event_id,
       ticket_id,
       amount_paid,
-      transaction_hash: txHash
+      transaction_hash: txHash.hash
     })
 
     // Return success response with CID

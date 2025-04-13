@@ -1,24 +1,17 @@
-const hre = require("hardhat");
+const { ethers } = require("hardhat");
 
 async function main() {
-  const [deployer] = await hre.ethers.getSigners(); // Get the first local account
-  
-  console.log("Deploying contract with address:", deployer.address);
-
-  // Compile & deploy the contract
-  const MyNFT = await hre.ethers.getContractFactory("MyNFT");
+  const MyNFT = await ethers.getContractFactory("MyNFT");
   const myNFT = await MyNFT.deploy();
-  await myNFT.waitForDeployment();
-
-  console.log("Contract deployed at:", await myNFT.getAddress());
+  await myNFT.waitForDeployment(); // <- ethers v6
+  console.log("Contract deployed to address:", await myNFT.getAddress());
 }
 
-// Run the deployment script
 main()
   .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
+  .catch((err) => {
+    console.error(err);
     process.exit(1);
   });
 
-//0x313D3BAF210179b670Ca4e2a31F9AcACc7418B74
+  //0x3A33b94460fF671E44dDe59319baf70960970133
