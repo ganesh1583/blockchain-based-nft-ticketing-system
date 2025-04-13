@@ -141,6 +141,18 @@ concertsRouter.get("/:conId", (req, res, next) => {
   res.send("Fetch details of a specific concert");
 });
 
+// Fetch All concerts
+concertsRouter.get("/allEvents", async (req, res, next) => {
+  try {
+    const eventData = await eventModel.find();
+    if (!eventData) res.status(404).json({ message: "No data found!" });
+    res.status(200).json({ eventData: eventData });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "internal server error", details: error.message });
+  }
+});
 
 
 module.exports = {
